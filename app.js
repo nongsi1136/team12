@@ -3,10 +3,12 @@ import cookieParser from 'cookie-parser';
 import UsersRouter from './routers/users.router.js';
 import DocumentsRouter from './routers/documents.router.js';
 import errorHandlingMiddleware from './src/middleware/error-handling.middleware.js';
+import logMiddleware from './src/middleware/log.middleware.js';
 
 const app = express();
 const PORT = 3336;
 
+app.use(logMiddleware);
 app.use(express.json());
 app.use(cookieParser());
 
