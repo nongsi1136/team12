@@ -15,6 +15,21 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
         .status(403)
         .json({ message: 'PROMOTION 카테고리에 작성할 권한이 없습니다.' });
     }
+
+    let allowedCategories = ['CHIT_CHAT']; // user와 admin이 모두 작성 가능한 카테고리
+
+    // admin인 경우 PROMOTION 카테고리도 작성 가능
+    if (role === 'admin') {
+      allowedCategories.push('PROMOTION');
+    }
+
+    // 요청된 카테고리가 허용된 카테고리 목록에 있는지 확인
+    if (!allowedCategories.includes(category)) {
+      return res
+        .status(403)
+        .json({ message: '해당 카테고리에 작성할 권한이 없습니다.' });
+    }
+
     const post = await prisma.posts.create({
       data: {
         userId: +userId,
@@ -25,7 +40,7 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
       },
     });
 
-    return res.status(201).json({ data: post, latestPosts });
+    return res.status(201).json({ data: post });
   } catch (error) {
     next(error);
   }
