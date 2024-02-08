@@ -1,7 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import UsersRouter from './routers/users.router.js';
-import DocumentsRouter from './routers/documents.router.js';
+import UsersRouter from './src/router/users.router.js';
+import DocumentsRouter from './src/router/documents.router.js';
 import errorHandlingMiddleware from './src/middleware/error-handling.middleware.js';
 import logMiddleware from './src/middleware/log.middleware.js';
 

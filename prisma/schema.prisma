@@ -8,14 +8,14 @@ datasource db {
 }
 
 model Users {
-  userId    Int        @id @default(autoincrement()) @map("userId")
-  email     String     @unique @map("email")
-  name      String     @map("name")
-  password  String     @map("password")
-  role      role       @default(user)
+  userId    Int      @id @default(autoincrement()) @map("userId")
+  email     String   @unique @map("email")
+  name      String   @map("name")
+  password  String   @map("password")
+  role      role     @default(user)
   userInfos UserInfos?
   posts     Posts[]
-
+ 
   @@map("Users")
 }
 
