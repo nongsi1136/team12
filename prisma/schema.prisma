@@ -1,1 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
 
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  userId    Int        @id @default(autoincrement()) @map("userId")
+  email     String     @unique @map("email")
+  name      String     @map("name")
+  password  String     @map("password")
+  role      role       @default(user)
+  userInfos UserInfos?
+  posts     Posts[]
+
+  @@map("Users")
+}
+
+enum role {
+  user
+  admin
+}
+
+model Posts {
+  postId    Int      @id @default(autoincrement()) @map("postId")
+  userId    Int      @map("userId")
+  title     String   @map("title")
+  content   String   @map("content") @db.Text
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@map("Posts")
+}
+
+model UserInfos {
+  userInfoId Int    @id @default(autoincrement()) @map("userInfoId")
+  userId     Int    @unique @map("userId")
+  age        Int    @map("age")
+  gender     String @map("gender")
+  introduce  String @map("introduce")
+  career     String @map("career")
+
+  user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@map("UserInfos")
+}
