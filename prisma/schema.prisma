@@ -38,6 +38,7 @@ model Posts {
   userId    Int      @map("userId")
   title     String   @map("title")
   content   String   @map("content") @db.Text
+  imageUrl  String?  @map("imageUrl") 
   createdAt DateTime @default(now()) @map("createdAt")        
   updatedAt DateTime @updatedAt @map("updatedAt")
   category Category @default(CHIT_CHAT)
