@@ -24,13 +24,21 @@ enum role {
   admin
 }
 
+enum Category {
+   PROMOTION
+   CHIT_CHAT
+   OTHER_CATEGORY
+}
+
 model Posts {
   postId    Int      @id @default(autoincrement()) @map("postId")
   userId    Int      @map("userId")
   title     String   @map("title")
   content   String   @map("content") @db.Text
-  createdAt DateTime @default(now()) @map("createdAt")
+  imageUrl  String?  @map("imageUrl") 
+  createdAt DateTime @default(now()) @map("createdAt")       
   updatedAt DateTime @updatedAt @map("updatedAt")
+  category Category @default(CHIT_CHAT)
 
   user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
