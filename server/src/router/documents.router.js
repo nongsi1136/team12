@@ -6,12 +6,14 @@ const router = express.Router();
 
 async function fetchLatestPosts(userId) {
   try {
+    // Prisma를 사용하여 데이터베이스에서 최신 게시글을 조회
     const latestPosts = await prisma.posts.findMany({
       orderBy: { createdAt: 'desc' },
       take: 9,
     });
-    return latestPosts;
+    return latestPosts; // 조회된 최신 게시글 목록 반환.
   } catch (error) {
+    //최신 게시글 조회 과정에서 오류 발생 시 오류 객체를 throw
     throw new Error(`최신 게시글 조회 오류: ${error}`);
   }
 }
