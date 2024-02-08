@@ -4,20 +4,6 @@ import authMiddleware from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
-async function fetchLatestPosts(userId) {
-  try {
-    // Prisma를 사용하여 데이터베이스에서 최신 게시글을 조회
-    const latestPosts = await prisma.posts.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 9,
-    });
-    return latestPosts; // 조회된 최신 게시글 목록 반환.
-  } catch (error) {
-    //최신 게시글 조회 과정에서 오류 발생 시 오류 객체를 throw
-    throw new Error(`최신 게시글 조회 오류: ${error}`);
-  }
-}
-
 // 1. 게시글 작성 API
 router.post('/posts', authMiddleware, async (req, res, next) => {
   const { title, content, category, imageUrl } = req.body;
@@ -53,7 +39,6 @@ router.get('/posts/latest', async (req, res, next) => {
     // 서버에서 최신 게시글을 가져오기
     const latestPosts = await prisma.posts.findMany({
       orderBy: { createdAt: 'desc' },
-      take: 9, // 최신 게시글 중 최대 9개만 가져옴, 변경 가능
     });
 
     // 최신 게시글을 클라이언트에게 HTTP 응답으로 전달
