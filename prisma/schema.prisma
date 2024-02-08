@@ -40,7 +40,6 @@ model Posts {
   updatedAt DateTime @updatedAt @map("updatedAt")
   views     Int      @default(0) @map("views")
   category Category @default(CHIT_CHAT)
-  desc      String   @map("desc")
 
   user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
