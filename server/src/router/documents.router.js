@@ -24,6 +24,10 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
         imageUrl: imageUrl,
       },
     });
+
+    // 최신 게시글 조회
+    fetchLatestPosts(userId); // 클라이언트에서 최신 게시글 조회를 요청하는 함수
+
     return res.status(201).json({ data: post });
   } catch (error) {
     next(error);
