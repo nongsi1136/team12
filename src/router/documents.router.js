@@ -57,7 +57,7 @@ router.get('/posts/latest', async (req, res, next) => {
     // 게시글 조회수 증가
     for (const post of latestPosts) {
       await prisma.posts.update({
-        where: { id: post.id },
+        where: { postId: post.userId },
         data: { views: post.views + 1 },
       });
     }
