@@ -31,12 +31,12 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
   }
 });
 
-//게시글 상세 조회 API >> 내 글만 확인할 수 있는 피드
+//게시글 조회 API >> 내 글만 확인할 수 있는 피드
 router.get('/posts/:userId', async (req, res, next) => {
   const { userId } = req.params;
 
   try {
-    const myPost = await prisma.posts.findUnique({
+    const myPost = await prisma.posts.findMany({
       where: { userId: parseInt(userId) },
       orderBy: { createdAt: prisma.SortOrder.desc }, // 최신 게시글이 먼저 표시됩니다.
       select: {
