@@ -103,60 +103,82 @@ router.get('/posts/mypost/:userId', async (req, res, next) => {
 });
 
 //4. 게시물 수정 API
-router.put('/Posts/:postId', authMiddleware, async (req, res, next) => {
-  try {
+router.put(
+  '/posts/post-edit/:postId',
+  authMiddleware,
+  async (req, res, next) => {
     const { postId } = req.params;
     const { userId } = req.user;
     const { title, content } = req.body;
 
-    const posts = await prisma.posts.findFirst({
-      where: { postId: +postId },
-    });
-    if (!title)
-      return res.status(404).json({ message: '게시물 조회에 실패하였습니다.' });
+    try {
+      const post = await prisma.posts.findFirst({
+        where: { postId: +postId },
+      });
+      if (!post)
+        return res
+          .status(404)
+          .json({ message: '게시물 조회에 실패하였습니다.' });
 
-    await prisma.posts.update({
-      data: {
-        title,
-        content,
-        createdAt,
-        updatedAt,
-      },
-      where: { postId: +postId, userId: +userId },
-    });
+      // 본인이 작성한 게시글에 대해서만 수정이 가능하게
+      if (post.userId !== parseInt(userId)) {
+        return res
+          .status(401)
+          .json({ message: '해당 이력서를 수정할 권한이 없습니다' });
+      }
 
-    return res.json({ message: '게시물이 수정됨' });
-  } catch (error) {
-    if (error.name === 'PrismaClientKnownRequestError')
-      return res.status(403).json({ message: '권한이 없습니다' });
+      // 게시물 수정 시 updatedAt 값을 설정하기 위해 현재 시간을 사용
+      const updatedAt = new Date();
+
+      const updatedPost = await prisma.posts.update({
+        where: { postId: parseInt(postId) },
+        data: {
+          title,
+          content,
+          updatedAt,
+        },
+        where: { postId: +postId, userId: +userId },
+      });
+
+      return res.json({
+        data: updatedPost,
+        message: '게시글이 수정되었습니다.',
+      });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 // 5. 게시물 삭제 API (사용자 및 관리자 권한)
-router.delete('/posts', authMiddleware, async (req, res, next) => {
+router.delete('/posts/:postId', authMiddleware, async (req, res, next) => {
   try {
     const { userId, role } = req.user;
     const { postId } = req.body;
 
-    const post = await prisma.posts.findFirst({
-      where: { postId: postId },
+    const post = await prisma.posts.findUnique({
+      where: { postId: parseInt(postId) },
     });
 
     // 게시물이 존재하지 않는 경우
     if (!post) {
-      return res.status(404).json({ message: '게시물을 찾을 수 없습니다.' });
+      return res
+        .status(404)
+        .json({ message: '해당 게시물을 찾을 수 없습니다.' });
     }
 
     // 사용자가 관리자인 경우 또는 게시물 작성자인 경우에만 삭제 허용
     if (role !== 'admin' && post.userId !== userId) {
-      return res.status(403).json({ message: '권한이 없습니다.' });
+      return res
+        .status(403)
+        .json({ message: '해당 게시글을 삭제할 권한이 없습니다.' });
     }
 
     await prisma.posts.delete({
-      where: { postId: postId, userId: +userId },
+      where: { postId: parseInt(postId) },
     });
 
-    return res.json({ message: '게시물이 삭제됨' });
+    return res.json({ message: '게시물이 삭제되었습니다.' });
   } catch (error) {
     if (error.name === 'PrismaClientKnownRequestError') {
       return res.status(403).json({ message: '권한이 없습니다' });
