@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -18,7 +15,7 @@ model Users {
   role      role     @default(user)
   userInfos UserInfos?
   posts     Posts[]
-  
+ 
   @@map("Users")
 }
 
@@ -27,25 +24,34 @@ enum role {
   admin
 }
 
+enum Category {
+   PROMOTION
+   CHIT_CHAT
+   OTHER_CATEGORY
+}
+
 model Posts {
   postId    Int      @id @default(autoincrement()) @map("postId")
   userId    Int      @map("userId")
   title     String   @map("title")
   content   String   @map("content") @db.Text
-  createdAt DateTime @default(now()) @map("createdAt")        
+  imageUrl  String?  @map("imageUrl") 
+  createdAt DateTime @default(now()) @map("createdAt")       
   updatedAt DateTime @updatedAt @map("updatedAt")
-  user     Users      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  category Category @default(CHIT_CHAT)
+
+  user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
   @@map("Posts")
 }
 
-
 model UserInfos {
-  userInfoId   Int      @id @default(autoincrement()) @map("userInfoId")
-  userId       Int      @unique @map("userId")
-  age          Int      @map("age")
-  gender       String   @map("gender")
-  introduce    String   @map("introduce")
-  career      String    @map("career")
+  userInfoId Int    @id @default(autoincrement()) @map("userInfoId")
+  userId     Int    @unique @map("userId")
+  age        Int    @map("age")
+  gender     String @map("gender")
+  introduce  String @map("introduce")
+  career     String @map("career")
 
   user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
