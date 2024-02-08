@@ -25,8 +25,6 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
       },
     });
 
-    const latestPosts = await fetchLatestPosts(userId); // 클라이언트에서 최신 게시글 조회를 요청하는 함수
-
     return res.status(201).json({ data: post, latestPosts });
   } catch (error) {
     next(error);
@@ -40,6 +38,14 @@ router.get('/posts/latest', async (req, res, next) => {
     const latestPosts = await prisma.posts.findMany({
       orderBy: { createdAt: 'desc' },
     });
+
+    // 게시글 조회수 증가
+    for (const post of latestPosts) {
+      await prisma.posts.update({
+        where: { id: post.id },
+        data: { views: post.views + 1 },
+      });
+    }
 
     // 최신 게시글을 클라이언트에게 HTTP 응답으로 전달
     return res.status(200).json({ data: latestPosts });
@@ -77,42 +83,42 @@ router.get('/posts/:userId', async (req, res, next) => {
 
 //4. 게시물 수정 API
 router.put(
-    '/Posts/:postId',
-    authMiddleware,
-    loginMiddleware,
-    async (req, res, next) => {
-      try {
-        const { postId } = req.params;
-        const { userId } = req.user;
-        const { title, content} = req.body;
-  
-        const posts = await prisma.posts.findFirst({
-          where: { postId: +postId },
-        });
-        if (!title)
-          return res
-            .status(404)
-            .json({ message: '게시물 조회에 실패하였습니다.' });
-  
-        await prisma.posts.update({
-          data: {
-            title,
-            content,
-            createdAt,
-            updatedAt
-          },
-          where: { postId: +postId, userId: +userId },
-        });
-  
-        return res.json({ message: '게시물이 수정됨' });
-      } catch (error) {
-        if (error.name === 'PrismaClientKnownRequestError')
-          return res.status(403).json({ message: '권한이 없습니다' });
-      }
+  '/Posts/:postId',
+  authMiddleware,
+  loginMiddleware,
+  async (req, res, next) => {
+    try {
+      const { postId } = req.params;
+      const { userId } = req.user;
+      const { title, content } = req.body;
+
+      const posts = await prisma.posts.findFirst({
+        where: { postId: +postId },
+      });
+      if (!title)
+        return res
+          .status(404)
+          .json({ message: '게시물 조회에 실패하였습니다.' });
+
+      await prisma.posts.update({
+        data: {
+          title,
+          content,
+          createdAt,
+          updatedAt,
+        },
+        where: { postId: +postId, userId: +userId },
+      });
+
+      return res.json({ message: '게시물이 수정됨' });
+    } catch (error) {
+      if (error.name === 'PrismaClientKnownRequestError')
+        return res.status(403).json({ message: '권한이 없습니다' });
     }
-  );
-  
-  // 5. 게시물 삭제 API (사용자 및 관리자 권한)
+  }
+);
+
+// 5. 게시물 삭제 API (사용자 및 관리자 권한)
 router.delete(
   '/posts',
   authMiddleware,
@@ -150,4 +156,4 @@ router.delete(
     }
   }
 );
-  export default router;
+export default router;
