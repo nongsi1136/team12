@@ -6,6 +6,64 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model Users {
+  userId    Int        @id @default(autoincrement()) @map("userId")
+  email     String     @unique @map("email")
+  name      String     @map("name")
+  password  String     @map("password")
+  role      role       @default(user)
+  userInfos UserInfos?
+  posts     Posts[]
+  comments  Comments[]
+
+  @@map("Users")
+}
+
+enum role {
+  user
+  admin
+}
+
+model Posts {
+  postId    Int        @id @default(autoincrement()) @map("postId")
+  userId    Int        @map("userId")
+  title     String     @map("title")
+  content   String     @map("content") @db.Text
+  createdAt DateTime   @default(now()) @map("createdAt")
+  updatedAt DateTime   @updatedAt @map("updatedAt")
+  user      Users      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  Comments  Comments[]
+
+  @@map("Posts")
+}
+
+model UserInfos {
+  userInfoId Int    @id @default(autoincrement()) @map("userInfoId")
+  userId     Int    @unique @map("userId")
+  age        Int    @map("age")
+  gender     String @map("gender")
+  introduce  String @map("introduce")
+  career     String @map("career")
+
+  user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@map("UserInfos")
+}
+
+model Comments {
+  commentId Int      @id @default(autoincrement()) @map("commentId")
+  userId    Int      @map("userId")
+  postId    Int      @map("postId")
+  content   String   @map("content")
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  post Posts @relation(fields: [postId], references: [postId], onDelete: Cascade)
+
+  @@map("Comments")
 }
