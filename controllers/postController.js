@@ -2,6 +2,13 @@ export const postRegisterView = async (req, res) => {
   const {ip} = req.ip;
   const {postId} = req.cookies;
   
+  if(!post) {
+    res.status(400).json({
+      success: false,
+      message: "post가 존재하지 않습니다." 
+    })
+  };
+
   try{
     if(!req.cookies[postId]) {
       res.cookie(postId, ip, {maxAge: '24h'});
@@ -36,10 +43,10 @@ export const postRegisterView = async (req, res) => {
           views: true,
         }
       });
-      return res.status(200).json({post})
+      return res.status(200).json({post});
     }
   } catch (error) {
-    res.status(400).json({})
+    res.status(400).json({message: "error가 발생했습니다."})
   }
 }
 
