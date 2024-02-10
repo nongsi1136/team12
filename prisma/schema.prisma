@@ -15,7 +15,8 @@ model Users {
   role      role       @default(user)
   userInfos UserInfos?
   posts     Posts[]
- 
+  comments  Comments[]
+
   @@map("Users")
 }
 
@@ -24,46 +25,42 @@ enum role {
   admin
 }
 
-enum Category {
-   PROMOTION
-   CHIT_CHAT
-   OTHER_CATEGORY
-}
-
 model Posts {
-  postId    Int      @id @default(autoincrement()) @map("postId")
-  userId    Int      @map("userId")
-  title     String   @map("title")
-  content   String   @map("content") @db.Text
-  imageUrl  String?  @map("imageUrl") 
-  createdAt DateTime @default(now()) @map("createdAt")       
-  updatedAt DateTime @updatedAt @map("updatedAt")
-  views     Int      @default(0) @map("views")
-  category Category @default(CHIT_CHAT)
-
-  user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  postId    Int        @id @default(autoincrement()) @map("postId")
+  userId    Int        @map("userId")
+  title     String     @map("title")
+  content   String     @map("content") @db.Text
+  createdAt DateTime   @default(now()) @map("createdAt")
+  updatedAt DateTime   @updatedAt @map("updatedAt")
+  user      Users      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  Comments  Comments[]
 
   @@map("Posts")
 }
 
 model UserInfos {
-  userInfoId Int      @id @default(autoincrement()) @map("userInfoId")
-  userId     Int      @unique @map("userId")
-  age        Int      @map("age")
-  gender     String   @map("gender")
-  position   position @default(member)
-  career     String   @map("career")
-  gym        String   @map("gym")
-  introduce  String   @map("introduce")
-  awards     String   @map("awards")
-  
+  userInfoId Int    @id @default(autoincrement()) @map("userInfoId")
+  userId     Int    @unique @map("userId")
+  age        Int    @map("age")
+  gender     String @map("gender")
+  introduce  String @map("introduce")
+  career     String @map("career")
+
   user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@map("UserInfos")
 }
 
-enum position {
-  director
-  trainer
-  member
+model Comments {
+  commentId Int      @id @default(autoincrement()) @map("commentId")
+  userId    Int      @map("userId")
+  postId    Int      @map("postId")
+  content   String   @map("content")
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  post Posts @relation(fields: [postId], references: [postId], onDelete: Cascade)
+
+  @@map("Comments")
 }
