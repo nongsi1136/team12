@@ -3,18 +3,29 @@ import {prisma} from '../utils/prisma/index.js';
 import authMiddleware from '../middlewares/auth.middleware.js';
 import joi from "joi";
 
-const schema = joi.object 
+const schema = joi.object({
+  content: joi.string().min(1).max(300).required(),
+});
 
 const router = express.Router();
 
 // 댓글 작성 
 router.post('/posts/:postId/comments', authMiddleware, async(req, res, next)=>{
   const {postId} = req.params;
-  const {content} = req.body; 
-  const {userId} = req.user; 
+  const {userId} = req.user;
+  const {content} = req.body;
 
-  if (!content) return res.status(404).json({success: false, message: '댓글의 내용이 비어있습니다.'})
-  if (!userId) return res.status(404).json({success: false, message: '알 수 없는 사용자입니다. 로그인을 진행해주세요.'})
+  if(!postId) {
+    return res.status(400).json({success: false, message: "포스트가 존재하지 않습니다."})
+  }
+
+  if (!content) {
+    return res.status(404).json({success: false, message: '댓글의 내용이 비어있습니다.'})
+  }
+  
+  if (!userId) {
+    return res.status(404).json({success: false, message: '알 수 없는 사용자입니다. 로그인을 진행해주세요.'})
+  }
   
   const post = await prisma.posts.findFirst({
     where: {
@@ -28,7 +39,6 @@ router.post('/posts/:postId/comments', authMiddleware, async(req, res, next)=>{
       postId, 
       userId,
       content,
-      createdAt,
       }
     });
 
@@ -39,12 +49,11 @@ router.post('/posts/:postId/comments', authMiddleware, async(req, res, next)=>{
 router.get('/posts/:postId/comments', async (req, res, next) => {
   const {postId} = req.params;
   
-  if (!postId) return res.status(404).json({success: false, message: '게시물이 존재하지 않습니다.'})
+  if (!postId) {
+    return res.status(404).json({success: false, message: '게시물이 존재하지 않습니다.'})
+  }
 
   const comments = await prisma.comments.findMany({
-    where: {
-      commentId: +comments.commentId
-    },
     select: {
       commentId: true, 
       userId: true, 
@@ -62,6 +71,11 @@ router.get('/posts/:postId/comments', async (req, res, next) => {
 
 // 댓글 수정
 router.patch('/posts/:postId/comments/:commentId', authMiddleware, async (req, res, next) => {
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ success: false, message: error.details[0].message });
+  }
+
   const {postId, commentId} = req.params;
   const {content} = req.body;
   const user = req.user;
@@ -74,18 +88,21 @@ router.patch('/posts/:postId/comments/:commentId', authMiddleware, async (req, r
     return res.status(400).json({success: false, message: "수정할 댓글을 찾을 수 없습니다."})
   }
   
-  if(user.userId !== prisma.comments.userId) {
-    return res.status(400).json({success: false, message: "댓글을 수정할 권한이 없습니다."})
-  }
-
-  const comment = await prisma.comments.findMany({
-    where: {
-      commentId: +commentId
-    }
-  });
-
   if(!content) {
     return res.status(400).json({success: false, message: "댓글의 내용이 비어있습니다."})
+  }
+
+  const comment = await prisma.comments.findUnique({
+    where: {
+      commentId: +commentId
+    }, 
+    select: {
+      userId: true,
+    }
+  });
+  
+  if(user.userId !== comment.userId) {
+    return res.status(400).json({success: false, message: "댓글을 수정할 권한이 없습니다."})
   }
 
   await prisma.comments.update({
@@ -103,6 +120,11 @@ router.patch('/posts/:postId/comments/:commentId', authMiddleware, async (req, r
 
 // 댓글 삭제
 router.delete('/posts/:postId/comments/:commentId', authMiddleware, async(req, res)=>{
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ success: false, message: error.details[0].message });
+  }
+
   const {postId, commentId} = req.params;
   const user = req.user;
 
@@ -114,15 +136,18 @@ router.delete('/posts/:postId/comments/:commentId', authMiddleware, async(req, r
     return res.status(400).json({success: false, message: "삭제할 댓글을 찾을 수 없습니다."})
   }
   
-  if(user.userId !== prisma.comments.userId) {
-    return res.status(400).json({success: false, message: "댓글을 삭제할 권한이 없습니다."})
-  }
-
-  const comment = await prisma.comments.findFirst({
+  const comment = await prisma.comments.findUnique({
     where: {
       commentId: +commentId,
+    }, 
+    select: {
+      userId: true,
     }
   });
+
+  if(user.userId !== comment.userId) {
+    return res.status(400).json({success: false, message: "댓글을 삭제할 권한이 없습니다."})
+  }
 
   await prisma.comments.delete({
     where: {
