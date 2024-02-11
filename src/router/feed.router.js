@@ -1,4 +1,5 @@
 import express from 'express';
+import {prisma} from '@prisma/client';
 
 const router = express.Router(); 
 // trend 피드 페이지
@@ -22,14 +23,14 @@ router.get('/feeds/trend', async(req, res)=>{
       views: 'desc'
     }
   })
-  return res.json({data: posts});
+  return res.status(200).json({data: posts});
 })
 
 // 상태-홍보 피드 페이지
-router.get('/feeds/promotion', async(req, res)=>{
+router.get('/feeds/event', async(req, res)=>{
   const posts = await prisma.posts.findMany({
     where: {
-      status: 'promotion',
+      status: 'event',
     },
     select: {
       postId: true,
@@ -49,7 +50,7 @@ router.get('/feeds/promotion', async(req, res)=>{
       createdAt: 'desc',
     }
   })
-  return res.json({data: posts});
+  return res.status(200).json({data: posts});
 })
 
 // 상태-홍보 피드 페이지
@@ -76,5 +77,5 @@ router.get('/feeds/chat', async(req, res)=>{
       createdAt: 'desc',
     }
   })
-  return res.json({data: posts});
+  return res.status(200).json({data: posts});
 })

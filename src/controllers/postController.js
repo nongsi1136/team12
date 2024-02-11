@@ -46,7 +46,7 @@ export const postRegisterView = async (req, res) => {
       return res.status(200).json({post});
     }
   } catch (error) {
-    res.status(400).json({message: "error가 발생했습니다."})
+    return res.status(400).json({message: "error가 발생했습니다."})
   }
 }
 
