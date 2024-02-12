@@ -17,7 +17,10 @@
     "winston": "^3.11.0"
   },
   "devDependencies": {
+    "dotenv": "^16.4.2",
     "nodemon": "^3.0.3",
     "prettier": "^3.2.5"
-  }
+  },
+  "repository": "https://github.com/nongsi1136/team12.git",
+  "author": "gemstone300 <claire.gemstone300@gmail.com>"
 }
