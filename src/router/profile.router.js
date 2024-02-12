@@ -154,10 +154,10 @@ router.patch(
         }
       }
 
-      //3. UserInfos 테이블의 사용자정보 수정
-      if (gender) {
-        gender = gender.toUpperCase();
-      }
+      // //3. UserInfos 테이블의 사용자정보 수정
+      // if (gender) {
+      //   gender = gender.toUpperCase();
+      // }
 
       await prisma.userInfos.update({
         where: {
