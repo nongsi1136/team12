@@ -15,7 +15,7 @@ model Users {
   role      role       @default(user)
   userInfos UserInfos?
   posts     Posts[]
-
+ 
   @@map("Users")
 }
 
@@ -46,17 +46,16 @@ model Posts {
 }
 
 model UserInfos {
-  userInfoId Int    @id @default(autoincrement()) @map("userInfoId")
-  userId     Int    @unique @map("userId")
-  age        Int    @map("age")
-  gender     String @map("gender")
-  position          position @default(member)
-  career     String @map("career")
-  gym               String   @map("gym")
-  introduce  String @map("introduce")
-  awards            String   @map("awards")
+  userInfoId Int      @id @default(autoincrement()) @map("userInfoId")
+  userId     Int      @unique @map("userId")
+  age        Int      @map("age")
+  gender     String   @map("gender")
+  position   position @default(member)
+  career     String   @map("career")
+  gym        String   @map("gym")
+  introduce  String   @map("introduce")
+  awards     String   @map("awards")
   
-
   user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@map("UserInfos")
