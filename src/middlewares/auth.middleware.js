@@ -41,4 +41,7 @@ export default async function (req, res, next) {
           .json({ message: error.message ?? '비정상적인 요청입니다.' });
     }
   }
+
 }
+
+
