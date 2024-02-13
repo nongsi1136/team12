@@ -15,7 +15,9 @@ model Users {
   role      role       @default(user)
   userInfos UserInfos?
   posts     Posts[]
- 
+  comments  Comments[]
+
+
   @@map("Users")
 }
 
@@ -23,6 +25,7 @@ enum role {
   user
   admin
 }
+
 
 enum Category {
    PROMOTION
@@ -40,7 +43,8 @@ model Posts {
   updatedAt DateTime @updatedAt @map("updatedAt")
   views     Int      @default(0) @map("views")
   category Category @default(CHIT_CHAT)
-
+  Comments  Comments[]
+  
   user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@map("Posts")
@@ -62,8 +66,23 @@ model UserInfos {
   @@map("UserInfos")
 }
 
+model Comments {
+  commentId Int      @id @default(autoincrement()) @map("commentId")
+  userId    Int      @map("userId")
+  postId    Int      @map("postId")
+  content   String   @map("content")
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  post Posts @relation(fields: [postId], references: [postId], onDelete: Cascade)
+
+  @@map("Comments")
+}
+
 enum position {
   director
   trainer
   member
 }
+
