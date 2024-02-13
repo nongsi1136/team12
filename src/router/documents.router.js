@@ -135,7 +135,9 @@ router.put(
         data: {
           title,
           content,
+          imageUrl,
           updatedAt,
+          category,
         },
         where: { postId: +postId, userId: +userId },
       });
