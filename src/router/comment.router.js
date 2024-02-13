@@ -50,7 +50,7 @@ router.post(
 
     const comment = await prisma.comments.create({
       data: {
-        postId,
+        postId: parseInt(postId),
         userId,
         content,
       },
@@ -151,14 +151,8 @@ router.patch(
 router.delete(
   '/posts/:postId/comments/:commentId',
   authMiddleware,
-  async (req, res) => {
-    const { error } = schema.validate(req.body);
-    if (error) {
-      return res
-        .status(400)
-        .json({ success: false, message: error.details[0].message });
-    }
 
+  async (req, res) => {
     const { postId, commentId } = req.params;
     const user = req.user;
 
@@ -191,7 +185,7 @@ router.delete(
 
     await prisma.comments.delete({
       where: {
-        commentId: comment.commentId,
+        commentId: parseInt(commentId),
       },
     });
 
