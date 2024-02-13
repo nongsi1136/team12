@@ -12,10 +12,11 @@ datasource db {
 
 model Users {
   userId    Int      @id @default(autoincrement()) @map("userId")
-  email     String   @unique @map("email")
-  name      String   @map("name")
-  password  String   @map("password")
-  role      role     @default(user)
+  email     String?   @unique @map("email")
+  name      String?   @map("name")
+  password  String?   @map("password")
+  role      role?     @default(user)
+  verificationCode Int? @map("verificationCode")
   userInfos UserInfos?
   posts     Posts[]
   
@@ -25,7 +26,8 @@ model Users {
 enum role {
   user
   admin
-}
+}  
+
 
 model Posts {
   postId    Int      @id @default(autoincrement()) @map("postId")
@@ -51,3 +53,5 @@ model UserInfos {
 
   @@map("UserInfos")
 }
+
+

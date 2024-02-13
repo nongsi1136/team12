@@ -7,9 +7,11 @@ import UsersRouter from './router/users.router.js';
 const app = express();
 const PORT = 3018;
 
+
+
+
 app.use(express.json());
 app.use(cookieParser());
-
 app.use('/api', [UsersRouter]);
 
 app.listen(PORT, () => {
