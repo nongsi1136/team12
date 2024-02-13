@@ -1,9 +1,10 @@
 import express from 'express';
-import {prisma} from '@prisma/client';
+import { prisma } from '@prisma/client';
 
-const router = express.Router(); 
+const router = express.Router();
+
 // trend 피드 페이지
-router.get('/feeds/trend', async(req, res)=>{
+router.get('/feeds/trend', async (req, res) => {
   const posts = await prisma.posts.findMany({
     select: {
       postId: true,
@@ -12,7 +13,7 @@ router.get('/feeds/trend', async(req, res)=>{
       user: {
         select: {
           name: true,
-        }
+        },
       },
       views: true,
       content: true,
@@ -20,14 +21,14 @@ router.get('/feeds/trend', async(req, res)=>{
       status: true,
     },
     orderBy: {
-      views: 'desc'
-    }
-  })
-  return res.status(200).json({data: posts});
-})
+      views: 'desc',
+    },
+  });
+  return res.status(200).json({ data: posts });
+});
 
 // 상태-홍보 피드 페이지
-router.get('/feeds/event', async(req, res)=>{
+router.get('/feeds/event', async (req, res) => {
   const posts = await prisma.posts.findMany({
     where: {
       status: 'event',
@@ -39,7 +40,7 @@ router.get('/feeds/event', async(req, res)=>{
       user: {
         select: {
           name: true,
-        }
+        },
       },
       views: true,
       content: true,
@@ -48,16 +49,16 @@ router.get('/feeds/event', async(req, res)=>{
     },
     orderBy: {
       createdAt: 'desc',
-    }
-  })
-  return res.status(200).json({data: posts});
-})
+    },
+  });
+  return res.status(200).json({ data: posts });
+});
 
 // 상태-홍보 피드 페이지
-router.get('/feeds/chat', async(req, res)=>{
+router.get('/feeds/chat', async (req, res) => {
   const posts = await prisma.posts.findMany({
     where: {
-      status: 'chat'
+      status: 'chat',
     },
     select: {
       postId: true,
@@ -66,7 +67,7 @@ router.get('/feeds/chat', async(req, res)=>{
       user: {
         select: {
           name: true,
-        }
+        },
       },
       views: true,
       content: true,
@@ -75,7 +76,9 @@ router.get('/feeds/chat', async(req, res)=>{
     },
     orderBy: {
       createdAt: 'desc',
-    }
-  })
-  return res.status(200).json({data: posts});
-})
+    },
+  });
+  return res.status(200).json({ data: posts });
+});
+
+export default router;

@@ -66,6 +66,12 @@ model UserInfos {
   @@map("UserInfos")
 }
 
+enum position {
+  director
+  trainer
+  member
+}
+
 model Comments {
   commentId Int      @id @default(autoincrement()) @map("commentId")
   userId    Int      @map("userId")
@@ -80,9 +86,4 @@ model Comments {
   @@map("Comments")
 }
 
-enum position {
-  director
-  trainer
-  member
-}
 
