@@ -38,6 +38,8 @@ model Posts {
   userId    Int      @map("userId")
   title     String   @map("title")
   content   String   @map("content") @db.Text
+  thumbnailUrl String @map("thumbnailUrl")
+  status  String  @map("status")
   imageUrl  String?  @map("imageUrl") 
   createdAt DateTime @default(now()) @map("createdAt")       
   updatedAt DateTime @updatedAt @map("updatedAt")
@@ -48,12 +50,6 @@ model Posts {
   user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@map("Posts")
-}
-
-enum position {
-  director
-  trainer
-  member
 }
 
 model UserInfos {
@@ -70,6 +66,12 @@ model UserInfos {
   user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@map("UserInfos")
+}
+
+enum position {
+  director
+  trainer
+  member
 }
 
 model Comments {

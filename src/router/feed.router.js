@@ -8,7 +8,7 @@ router.get('/feeds/trend', async (req, res) => {
   const posts = await prisma.posts.findMany({
     select: {
       postId: true,
-      thumbnailUrl: true,
+      imageUrl: true,
       title: true,
       user: {
         select: {

@@ -104,12 +104,12 @@ router.get('/posts/mypost/:userId', async (req, res, next) => {
 
 //4. 게시물 수정 API
 router.put(
-  '/posts/post-edit/:postId',
+  '/posts/postedit/:postId',
   authMiddleware,
   async (req, res, next) => {
     const { postId } = req.params;
     const { userId } = req.user;
-    const { title, content } = req.body;
+    const { title, content, imageUrl} = req.body;
 
     try {
       const post = await prisma.posts.findFirst({
@@ -137,7 +137,7 @@ router.put(
           content,
           imageUrl,
           updatedAt,
-          category,
+       
         },
         where: { postId: +postId, userId: +userId },
       });
