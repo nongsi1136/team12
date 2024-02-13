@@ -38,6 +38,7 @@ model Posts {
   imageUrl  String?  @map("imageUrl") 
   createdAt DateTime @default(now()) @map("createdAt")       
   updatedAt DateTime @updatedAt @map("updatedAt")
+  views     Int      @default(0) @map("views")
   category Category @default(CHIT_CHAT)
 
   user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)

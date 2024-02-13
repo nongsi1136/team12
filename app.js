@@ -1,9 +1,10 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import UsersRouter from './routers/users.router.js';
-import DocumentsRouter from './routers/documents.router.js';
-import errorHandlingMiddleware from './src/middleware/error-handling.middleware.js';
-import logMiddleware from './src/middleware/log.middleware.js';
+import UsersRouter from './src/router/users.router.js';
+import DocumentsRouter from './src/router/documents.router.js';
+import ProfileRouter from './src/router/profile.router.js';
+import errorHandlingMiddleware from './src/middlewares/error-handling.middleware.js';
+import logMiddleware from './src/middlewares/log.middleware.js';
 
 const app = express();
 const PORT = 3336;
@@ -12,7 +13,7 @@ app.use(logMiddleware);
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api', [UsersRouter, DocumentsRouter]);
+app.use('/api', [UsersRouter, DocumentsRouter, ProfileRouter]);
 
 app.use(errorHandlingMiddleware);
 
