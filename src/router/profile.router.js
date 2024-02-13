@@ -58,7 +58,7 @@ router.get('/profile/:userId', authMiddleware, async (req, res, next) => {
 
 /** 사용자 프로필 수정*/
 router.patch(
-  '/profile-edit/:userId',
+  '/profile/:userId',
   authMiddleware,
   async (req, res, next) => {
     try {
@@ -165,12 +165,12 @@ router.patch(
         },
         data: {
           age,
-          gender,
-          position,
-          career,
+          gender: gender.toUpperCase(), // 성별을 대문자로 변환합니다.
           introduce,
-          awards,
+          career,
+          position,
           gym,
+          awards,
         },
       });
 
@@ -185,7 +185,7 @@ router.patch(
 
 /** 사용자 프로필 삭제*/
 router.delete(
-  '/profile-del/:userId',
+  '/profile/:userId',
   authMiddleware,
   async (req, res, next) => {
     try {
@@ -236,3 +236,4 @@ router.delete(
 );
 
 export default router;
+ 
