@@ -50,6 +50,12 @@ model Posts {
   @@map("Posts")
 }
 
+enum position {
+  director
+  trainer
+  member
+}
+
 model UserInfos {
   userInfoId Int      @id @default(autoincrement()) @map("userInfoId")
   userId     Int      @unique @map("userId")
@@ -64,12 +70,6 @@ model UserInfos {
   user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@map("UserInfos")
-}
-
-enum position {
-  director
-  trainer
-  member
 }
 
 model Comments {
