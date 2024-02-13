@@ -2,10 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import UsersRouter from './src/router/users.router.js';
 import DocumentsRouter from './src/router/documents.router.js';
-<<<<<<< HEAD
-=======
 import ProfileRouter from './src/router/profile.router.js';
->>>>>>> c6a810cf702f2050c6a0fc7cd525eb68378a7fd6
 import errorHandlingMiddleware from './src/middlewares/error-handling.middleware.js';
 import logMiddleware from './src/middlewares/log.middleware.js';
 
