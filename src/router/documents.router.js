@@ -54,14 +54,6 @@ router.get('/posts/latest', async (req, res, next) => {
       orderBy: { createdAt: 'desc' },
     });
 
-    // 게시글 조회수 증가
-    for (const post of latestPosts) {
-      await prisma.posts.update({
-        where: { postId: post.userId },
-        data: { views: post.views + 1 },
-      });
-    }
-
     // 최신 게시글을 클라이언트에게 HTTP 응답으로 전달
     return res.status(200).json({ data: latestPosts });
   } catch (error) {
@@ -70,35 +62,32 @@ router.get('/posts/latest', async (req, res, next) => {
   }
 });
 
-// 3. 내 게시글 조회 API >> 이제 이것을 가지고 내 글만 확인할 수 있는 피드를 만들면 되지 않을까요...?ㅎ
-router.get('/posts/mypost/:userId', async (req, res, next) => {
+// 3. 게시물 조회 API
+router.get('/posts/:postId', async (req, res, next) => {
+  const { postId } = req.params;
+
   try {
-    const { userId } = req.params;
-
-    if (!userId) {
-      return res.status(400).json({ message: 'userId가 누락되었습니다.' });
-    }
-
-    const userPosts = await prisma.posts.findMany({
-      where: { userId: +userId },
-      orderBy: { createdAt: 'desc' }, // 최신 게시글이 먼저 표시됩니다.
-      select: {
-        postId: true,
-        title: true,
-        content: true,
-        imageUrl: true,
-        user: {
-          select: { name: true },
-        },
-        createdAt: true,
-        category: true,
-      },
+    // 게시물 조회
+    const post = await prisma.posts.findUnique({
+      where: { postId: parseInt(postId) },
     });
 
-    return res.status(200).json({ data: userPosts });
+    if (!post) {
+      return res
+        .status(404)
+        .json({ message: '해당 게시물을 찾을 수 없습니다.' });
+    }
+
+    // 조회수 증가
+    await prisma.posts.update({
+      where: { postId: parseInt(postId) },
+      data: { views: post.views + 1 },
+    });
+
+    // 클라이언트에 응답 전달
+    return res.status(200).json({ data: post });
   } catch (error) {
-    console.error('내 게시글 조회 API 오류:', error);
-    return res.status(500).json({ message: '서버 오류 발생' });
+    next(error);
   }
 });
 
