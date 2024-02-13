@@ -8,11 +8,11 @@ datasource db {
 }
 
 model Users {
-  userId    Int      @id @default(autoincrement()) @map("userId")
-  email     String   @unique @map("email")
-  name      String   @map("name")
-  password  String   @map("password")
-  role      role     @default(user)
+  userId    Int        @id @default(autoincrement()) @map("userId")
+  email     String     @unique @map("email")
+  name      String     @map("name")
+  password  String     @map("password")
+  role      role       @default(user)
   userInfos UserInfos?
   posts     Posts[]
  
@@ -47,14 +47,23 @@ model Posts {
 }
 
 model UserInfos {
-  userInfoId Int    @id @default(autoincrement()) @map("userInfoId")
-  userId     Int    @unique @map("userId")
-  age        Int    @map("age")
-  gender     String @map("gender")
-  introduce  String @map("introduce")
-  career     String @map("career")
-
+  userInfoId Int      @id @default(autoincrement()) @map("userInfoId")
+  userId     Int      @unique @map("userId")
+  age        Int      @map("age")
+  gender     String   @map("gender")
+  position   position @default(member)
+  career     String   @map("career")
+  gym        String   @map("gym")
+  introduce  String   @map("introduce")
+  awards     String   @map("awards")
+  
   user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@map("UserInfos")
+}
+
+enum position {
+  director
+  trainer
+  member
 }
