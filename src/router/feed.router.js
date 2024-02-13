@@ -81,4 +81,37 @@ router.get('/feeds/chat', async (req, res) => {
   return res.status(200).json({ data: posts });
 });
 
+// 내 피드 확인 페이지
+// 3. 내 게시글 조회 API
+router.get('/feeds/mypost/:userId', async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'userId가 누락되었습니다.' });
+    }
+
+    const userPosts = await prisma.posts.findMany({
+      where: { userId: +userId },
+      orderBy: { createdAt: 'desc' }, // 최신 게시글이 먼저 표시됩니다.
+      select: {
+        postId: true,
+        title: true,
+        content: true,
+        imageUrl: true,
+        user: {
+          select: { name: true },
+        },
+        createdAt: true,
+        category: true,
+      },
+    });
+
+    return res.status(200).json({ data: userPosts });
+  } catch (error) {
+    console.error('내 게시글 조회 API 오류:', error);
+    return res.status(500).json({ message: '서버 오류 발생' });
+  }
+});
+
 export default router;
