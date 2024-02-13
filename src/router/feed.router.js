@@ -31,7 +31,7 @@ router.get('/feeds/trend', async (req, res) => {
 router.get('/feeds/event', async (req, res) => {
   const posts = await prisma.posts.findMany({
     where: {
-      status: 'event',
+      category: 'PROMOTION',
     },
     select: {
       postId: true,
@@ -54,11 +54,11 @@ router.get('/feeds/event', async (req, res) => {
   return res.status(200).json({ data: posts });
 });
 
-// 상태-홍보 피드 페이지
+// 자유 게시글(잡담) 피드 페이지
 router.get('/feeds/chat', async (req, res) => {
   const posts = await prisma.posts.findMany({
     where: {
-      status: 'chat',
+      category: 'CHIT_CHAT',
     },
     select: {
       postId: true,

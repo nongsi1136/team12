@@ -109,7 +109,7 @@ router.put(
   async (req, res, next) => {
     const { postId } = req.params;
     const { userId } = req.user;
-    const { title, content, imageUrl} = req.body;
+    const { title, content, imageUrl } = req.body;
 
     try {
       const post = await prisma.posts.findFirst({
@@ -137,7 +137,6 @@ router.put(
           content,
           imageUrl,
           updatedAt,
-       
         },
         where: { postId: +postId, userId: +userId },
       });
