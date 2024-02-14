@@ -76,6 +76,7 @@ router.get('/posts/:postId/comments', async (req, res, next) => {
       userId: true,
       content: true,
       createdAt: true,
+      updatedAt: true,
     },
     orderBy: {
       createdAt: 'desc',
@@ -125,6 +126,7 @@ router.patch(
       },
       select: {
         userId: true,
+        content: true,
       },
     });
 

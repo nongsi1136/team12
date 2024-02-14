@@ -1,24 +1,12 @@
-import express from 'express';
 import { prisma } from '../utils/prisma/index.js';
 
-// 라우터 생성
-// const router = express.Router();
-
 export const postRegisterView = async (req, res) => {
-  const { ip } = req.ip;
-  const { postId } = req.cookies;
-
-  // res.cookie(postId, ip, { maxAge: 1000 * 60 });
-
-  // if (!post) {
-  //   res.status(400).json({
-  //     success: false,
-  //     message: 'post가 존재하지 않습니다.',
-  //   });
-  // }
-
+  const {ip} = req;
+  const {postId} = req.params
+  
+  console.log(req.cookies[postId]);
   try {
-    if (!postId) {
+    if (!req.cookies[postId]) {
       const post = await prisma.posts.findFirst({
         where: {
           postId: +req.params.postId,
@@ -27,7 +15,7 @@ export const postRegisterView = async (req, res) => {
           views: true,
         },
       });
-      console.log(post);
+      
       post.views += 1;
 
       await prisma.posts.update({
@@ -39,6 +27,7 @@ export const postRegisterView = async (req, res) => {
         },
       });
 
+      res.cookie(postId, ip, { maxAge: 1000 * 60 * 60});
       return res.status(200).json({ post });
     } else {
       const post = await prisma.posts.findFirst({
