@@ -12,7 +12,6 @@ import logMiddleware from './src/middlewares/log.middleware.js';
 const app = express();
 const PORT = 3336;
 
-// app.use(postRegisterView());
 app.use(logMiddleware);
 app.use(express.json());
 app.use(cookieParser());
