@@ -1,4 +1,3 @@
-
 // src/routes/users.router.js
 
 import express from 'express';
@@ -7,7 +6,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const router = express.Router();
-
 
 //사용자 회원가입 API
 router.post('/sign-up', async (req, res, next) => {
