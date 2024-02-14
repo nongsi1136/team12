@@ -1,6 +1,7 @@
 import express from 'express';
 import { prisma } from '../utils/prisma/index.js';
 import authMiddleware from '../middlewares/auth.middleware.js';
+import { postRegisterView } from '../controllers/postController.js';
 const router = express.Router();
 
 // 1. 게시글 작성 API
@@ -46,33 +47,34 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
 });
 
 // 2. 게시물 조회 API
-router.get('/posts/:postId', async (req, res, next) => {
-  const { postId } = req.params;
+router.get('/posts/:postId', postRegisterView);
+// , async (req, res, next) => {
+//   const { postId } = req.params;
 
-  try {
-    // 게시물 조회
-    const post = await prisma.posts.findUnique({
-      where: { postId: parseInt(postId) },
-    });
+// try {
+//   // 게시물 조회
+//   const post = await prisma.posts.findUnique({
+//     where: { postId: parseInt(postId) },
+//   });
 
-    if (!post) {
-      return res
-        .status(404)
-        .json({ message: '해당 게시물을 찾을 수 없습니다.' });
-    }
+//   if (!post) {
+//     return res
+//       .status(404)
+//       .json({ message: '해당 게시물을 찾을 수 없습니다.' });
+//   }
 
-    // 조회수 증가
-    await prisma.posts.update({
-      where: { postId: parseInt(postId) },
-      data: { views: post.views + 1 },
-    });
+// // 조회수 증가
+// await prisma.posts.update({
+//   where: { postId: parseInt(postId) },
+//   data: { views: post.views + 1 },
+// });
 
-    // 클라이언트에 응답 전달
-    return res.status(200).json({ data: post });
-  } catch (error) {
-    next(error);
-  }
-});
+//     // 클라이언트에 응답 전달
+//     return res.status(200).json({ data: post });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 //3. 게시물 수정 API
 router.put(
