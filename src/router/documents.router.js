@@ -47,40 +47,62 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
 });
 
 // 2. 게시물 조회 API
-router.get('/posts/:postId', postRegisterView);
-// , async (req, res, next) => {
-//   const { postId } = req.params;
+router.get('/posts/:postId', async (req, res, next) => {
+  const { postId } = req.params;
+  const {ip} = req;
+  
+  console.log(req.cookies[postId]);
+  try {
+    if (!req.cookies[postId]) {
+      const post = await prisma.posts.findFirst({
+        where: {
+          postId: +req.params.postId,
+        },
+        select: {
+          views: true,
+        },
+      });
+      
+      post.views += 1;
 
-// try {
-//   // 게시물 조회
-//   const post = await prisma.posts.findUnique({
-//     where: { postId: parseInt(postId) },
-//   });
+      await prisma.posts.update({
+        where: {
+          postId: +req.params.postId,
+        },
+        data: {
+          views: post.views,
+        },
+      });
 
-//   if (!post) {
-//     return res
-//       .status(404)
-//       .json({ message: '해당 게시물을 찾을 수 없습니다.' });
-//   }
+      res.cookie(postId, ip, { maxAge: 1000 * 60 * 60});
+    } 
+  // 게시물 조회
+  const post = await prisma.posts.findUnique({
+    where: { postId: parseInt(postId) },
+  });
 
-// // 조회수 증가
-// await prisma.posts.update({
-//   where: { postId: parseInt(postId) },
-//   data: { views: post.views + 1 },
-// });
+  if (!post) {
+    return res
+      .status(404)
+      .json({ message: '해당 게시물을 찾을 수 없습니다.' });
+  }
 
-//     // 클라이언트에 응답 전달
-//     return res.status(200).json({ data: post });
-//   } catch (error) {
-//     next(error);
-//   }
-// });
+  // 조회수 증가
+  await prisma.posts.update({
+    where: { postId: parseInt(postId) },
+    data: { views: post.views + 1 },
+  });
+
+    // 클라이언트에 응답 전달
+  return res.status(200).json({ data: post });
+  } catch (error) {
+    next(error);
+  }
+});
 
 //3. 게시물 수정 API
-router.put(
-  '/posts/postedit/:postId',
-  authMiddleware,
-  async (req, res, next) => {
+router.put( // 경로에 postedit 삭제
+  '/posts/:postId', authMiddleware, async (req, res, next) => {
     const { postId } = req.params;
     const { userId } = req.user;
     const { title, content, imageUrl } = req.body;
