@@ -51,8 +51,18 @@ router.get('/posts/:postId', async (req, res, next) => {
   const { postId } = req.params;
   const { ip } = req;
 
-  console.log(req.cookies[postId]);
   try {
+    // 게시물 조회
+    const post = await prisma.posts.findUnique({
+      where: { postId: parseInt(postId) },
+    });
+
+    if (!post) {
+      return res
+        .status(404)
+        .json({ message: '해당 게시물을 찾을 수 없습니다.' });
+    }
+
     if (!req.cookies[postId]) {
       const post = await prisma.posts.findFirst({
         where: {
@@ -74,27 +84,21 @@ router.get('/posts/:postId', async (req, res, next) => {
         },
       });
 
-      res.cookie(postId, ip, { maxAge: 1000 * 60 * 60 });
+
+      res.cookie(postId, ip, { maxAge: 1000 * 60 * 60});
+    } else {
+      await prisma.posts.update({
+        where: { 
+          postId: parseInt(postId) 
+        },
+        data: { 
+          views: post.views
+        },
+      });
     }
-    // 게시물 조회
-    const post = await prisma.posts.findUnique({
-      where: { postId: parseInt(postId) },
-    });
-
-    if (!post) {
-      return res
-        .status(404)
-        .json({ message: '해당 게시물을 찾을 수 없습니다.' });
-    }
-
-    // 조회수 증가
-    await prisma.posts.update({
-      where: { postId: parseInt(postId) },
-      data: { views: post.views + 1 },
-    });
-
-    // 클라이언트에 응답 전달
-    return res.status(200).json({ data: post });
+  
+  // 클라이언트에 응답 전달
+  return res.status(200).json({ data: post });
   } catch (error) {
     next(error);
   }
