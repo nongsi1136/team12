@@ -1,7 +1,7 @@
 import express from 'express';
 import { prisma } from '../utils/prisma/index.js';
 import authMiddleware from '../middlewares/auth.middleware.js';
-import { postRegisterView } from '../controllers/postController.js';
+
 const router = express.Router();
 
 // 1. 게시글 작성 API
