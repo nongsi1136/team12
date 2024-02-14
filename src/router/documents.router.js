@@ -45,23 +45,7 @@ router.post('/posts', authMiddleware, async (req, res, next) => {
   }
 });
 
-// // 2. 최신 게시글 조회 API
-// router.get('/posts/latest', async (req, res, next) => {
-//   try {
-//     // 서버에서 최신 게시글을 가져오기
-//     const latestPosts = await prisma.posts.findMany({
-//       orderBy: { createdAt: 'desc' },
-//     });
-
-//     // 최신 게시글을 클라이언트에게 HTTP 응답으로 전달
-//     return res.status(200).json({ data: latestPosts });
-//   } catch (error) {
-//     // 오류가 발생한 경우 적절한 오류 처리를 수행.
-//     next(error);
-//   }
-// });
-
-// 3. 게시물 조회 API
+// 2. 게시물 조회 API
 router.get('/posts/:postId', async (req, res, next) => {
   const { postId } = req.params;
 
@@ -90,7 +74,7 @@ router.get('/posts/:postId', async (req, res, next) => {
   }
 });
 
-//4. 게시물 수정 API
+//3. 게시물 수정 API
 router.put(
   '/posts/postedit/:postId',
   authMiddleware,
@@ -139,7 +123,7 @@ router.put(
   }
 );
 
-// 5. 게시물 삭제 API (사용자 및 관리자 권한)
+// 4. 게시물 삭제 API (사용자 및 관리자 권한)
 router.delete('/posts/:postId', authMiddleware, async (req, res, next) => {
   try {
     const { userId, role } = req.user;

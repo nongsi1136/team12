@@ -179,7 +179,7 @@ router.patch('/profile/:userId', authMiddleware, async (req, res, next) => {
   }
 });
 
-/** 사용자 프로필 삭제*/
+/** 회원 탈퇴 : 사용자 프로필 삭제*/
 router.delete('/profile/:userId', authMiddleware, async (req, res, next) => {
   try {
     const { userId } = req.params;
