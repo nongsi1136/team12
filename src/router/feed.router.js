@@ -18,7 +18,6 @@ router.get('/feeds/trend', async (req, res) => {
       views: true,
       content: true,
       createdAt: true,
-      status: true,
     },
     orderBy: {
       views: 'desc',
@@ -45,7 +44,6 @@ router.get('/feeds/event', async (req, res) => {
       views: true,
       content: true,
       createdAt: true,
-      status: true,
     },
     orderBy: {
       createdAt: 'desc',
@@ -72,7 +70,6 @@ router.get('/feeds/chat', async (req, res) => {
       views: true,
       content: true,
       createdAt: true,
-      status: true,
     },
     orderBy: {
       createdAt: 'desc',
