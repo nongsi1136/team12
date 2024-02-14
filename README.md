@@ -81,7 +81,7 @@
   <tbody>
     <tr>
       <td align="center"><a href=""><img src="https://github.com/nongsi1136/team12/assets/154482024/d524c960-f171-48a1-8158-4f815b19403a"width="100px;" alt=""/><br /><sub><b>FE 팀장 : 정신홍 </b></sub></a><br /></td>
-      <td align="center"><a href=""><img src="https://github.com/nongsi1136/team12/assets/154482024/35771e1d-f933-460f-9abd-d89b07aae6ec" width="100px;" alt=""/><br /><sub><b>FE 팀원 : 김진영 </b></sub></a><br /></td>
+      <td align="center"><a href=""><img src="https://github.com/nongsi1136/team12/assets/154482024/35771e1d-f933-460f-9abd-d89b07aae6ec" width="100px;" alt=""/><br /><sub><b>FE 팀원 : 김주영 </b></sub></a><br /></td>
       <td align="center"><a href=""><img src="https://github.com/nongsi1136/team12/assets/154482024/456aa118-90c5-4c96-82e7-c9449e5a6dcd" width="100px;" alt=""/><br /><sub><b>FE 팀원 : 황세민 </b></sub></a><br /></td>
      <tr/>
        <td align="center"><a href=""><img src="https://github.com/nongsi1136/team12/assets/154482024/fa8dff64-5322-412b-8ffb-9eb54ff7c864" width="100px;" alt=""/><br /><sub><b>FE 부팀장 : 최인철 </b></sub></a><br /></td>
