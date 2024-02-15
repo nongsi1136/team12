@@ -10,6 +10,7 @@
 
 [fithub 개발 프로젝트 발표 자료](https://www.notion.so/nongsi/fithub-291635c6c39642ec9d724549e9338710?pvs=4)
 
+[인섬니아 실행 유튜브 영상](https://youtu.be/Tpz5AqhTSjk?si=QGsPD8SqN9G6ROLo)
 
 ## 🚀 주요 기능 
 <details> 
