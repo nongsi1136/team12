@@ -64,6 +64,9 @@
 <details> 
  <summary> ERD </summary>
 <div markdown="3">
+ 
+ [FitHub ERD](https://www.erdcloud.com/d/cXRBC7cAAyf7R4jsi)
+ 
  </div>
 </details>
 
