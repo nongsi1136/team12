@@ -80,7 +80,7 @@ router.get('/feeds/chat', async (req, res) => {
 
 // 내 피드 확인 페이지
 // 3. 내 게시글 조회 API
-router.get('/feeds/mypost/:userId', async (req, res, next) => {
+router.get('/feeds/:userId', async (req, res, next) => {
   try {
     const { userId } = req.params;
 
